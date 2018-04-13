@@ -4,12 +4,26 @@
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Converters.fs" />
-    <EmbeddedResource Include="TicTacToePage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <Compile Include="TicTacToePage.xaml.fs">
-      <DependentUpon>TicTacToePage.xaml</DependentUpon>
+    <Compile Include="..\..\Elmish.XamarinForms\Elmish.XamarinForms\FableStub.fs">
+      <Link>elmish/FableStub.fs</Link>
+    </Compile>
+    <Compile Include="..\..\Elmish.XamarinForms\Elmish.XamarinForms\..\paket-files\neutral\fable-elmish\elmish\src\cmd.fs">
+      <Link>elmish/cmd.fs</Link>
+    </Compile>
+    <Compile Include="..\..\Elmish.XamarinForms\Elmish.XamarinForms\..\paket-files\neutral\fable-elmish\elmish\src\program.fs">
+      <Link>elmish/program.fs</Link>
+    </Compile>
+    <Compile Include="..\..\Elmish.XamarinForms\Elmish.XamarinForms\Cmd.fs">
+      <Link>Elmish.XamarinForms/Cmd.fs</Link>
+    </Compile>
+    <Compile Include="..\..\Elmish.XamarinForms\Elmish.XamarinForms\Binding.fs">
+      <Link>Elmish.XamarinForms/Binding.fs</Link>
+    </Compile>
+    <Compile Include="..\..\Elmish.XamarinForms\Elmish.XamarinForms\ViewModel.fs">
+      <Link>Elmish.XamarinForms/ViewModel.fs</Link>
+    </Compile>
+    <Compile Include="..\..\Elmish.XamarinForms\Elmish.XamarinForms\Combinators.fs">
+      <Link>Elmish.XamarinForms/Combinators.fs</Link>
     </Compile>
     <Compile Include="App.fs" />
     <Compile Include="AssemblyInfo.fs" />
@@ -18,10 +32,5 @@
     <PackageReference Include="FSharp.Core" Version="4.3.4" />
     <PackageReference Include="Xamarin.Forms" Version="2.5.1.444934" />
     <PackageReference Include="FSharp.Control.AsyncSeq" Version="2.0.21" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Elmish.XamarinForms">
-      <HintPath>..\Elmish\Elmish.XamarinForms.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

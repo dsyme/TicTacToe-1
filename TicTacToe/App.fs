@@ -47,6 +47,8 @@ type Model =
 /// The model, update and view content of the app. This is placed in an 
 /// independent model to facilitate unit testing.
 module App = 
+    open System.Windows.Input
+    open System.Runtime.CompilerServices
 
     let positions = 
         [ for x in 0 .. 2 do 
@@ -122,10 +124,11 @@ module App =
 
     /// A helper used in the 'view' function to get the name 
     /// of the Xaml resource for the image for a player
-    let imageForPlayer player =
-        match player with
-        | X -> "Cross"
-        | O -> "Nought"
+    let imageForPos cell =
+        match cell with
+        | Full X -> "Cross"
+        | Full O -> "Nought"
+        | Empty -> ""
 
     /// A helper to get the suffix used in the Xaml for a position on the board.
     let uiText (row,col) = 
@@ -143,15 +146,41 @@ module App =
          | _ -> false
 
     /// The 'view' function giving the Xaml bindings from the model to the view
-    let view () =
-        TicTacToePage (), 
-        [ yield "TurnMessage" |> Binding.oneWay (fun m -> getMessage m)
-          yield "Restart" |> Binding.msg Restart
-          for pos in positions do 
-              yield ("Play" + uiText pos) |> Binding.msg (Play pos)
-              yield ("CanPlay" + uiText pos) |> Binding.oneWay (fun m -> canPlay m m.Board.[pos] )
-              yield ("Image" + uiText pos) |> Binding.oneWay (fun m -> match m.Board.[pos] with | Empty -> "" | Full p -> imageForPlayer p )
-        ]
+    let view (model: Model) dispatch =
+        rows 
+            [ rowdef "*"; rowdef "auto"; rowdef "auto" ]
+            [ grid 
+                [ rowdef "*"; rowdef 5.0; rowdef "*"; rowdef 5.0; rowdef "*" ]
+                [ coldef "*"; coldef 5.0; coldef "*"; coldef 5.0; coldef "*" ]
+                [ yield rect Color.Black @@ gridRow 1
+                  yield rect Color.Black @@ gridRow 3 
+                  yield rect Color.Black @@ gridCol 1
+                  yield rect Color.Black @@ gridCol 3
+                  for ((row,col) as pos) in positions do 
+                      let x = 
+                          if canPlay model model.Board.[pos] then 
+                              button (fun () -> dispatch (Play pos)) :> View
+                          else
+                              imageResource (imageForPos model.Board.[pos]) :> _
+                          |> withMargin 5.0
+                      yield x @@ gridLoc (row*2) (col*2) ]
+
+                |> withRowSpacing 0.0
+                |> withColumnSpacing 0.0
+                |> withHorizontalOptions LayoutOptions.Center
+                |> withVerticalOptions LayoutOptions.Center
+
+              label (getMessage model) 
+                 |> withMargin 10.0
+                 |> withLabelTextColor Color.Black
+                 |> withHorizontalTextAlignment TextAlignment.Center
+
+              button (fun () -> dispatch Restart)
+                 |> withText("Restart game")
+                 |> withBackgroundColor(Color.LightBlue)
+                 |> withButtonTextColor(Color.Black)  ]
+
+                   //,FontSize=(FontSizeConverter().ConvertFromInvariantString "Large") :> float)
 
 
 /// Stitch the model, update and view content into a single app.
@@ -165,9 +194,10 @@ type App() =
         Application.Current.MainPage.DisplayAlert("Game over", msg, "OK") |> ignore
 
     let page = 
-        Program.mkSimple App.init (App.update gameOver) (fun _ _ -> App.view())
+        Program.mkSimple App.init (App.update gameOver) (fun _ _ -> (HelperPage(), App.view), []) 
         |> Program.withConsoleTrace
         |> Program.run
         
-    do base.MainPage <- new NavigationPage(page, BarBackgroundColor = Color.LightBlue, BarTextColor = Color.Black)
+    let mainPage = NavigationPage(page, BarBackgroundColor = Color.LightBlue, BarTextColor = Color.Black)
+    do base.MainPage <- mainPage
 
