@@ -1,4 +1,5 @@
-﻿namespace TicTacToe
+﻿// Copyright 2018 Elmish.XamarinForms contributors. See LICENSE.md for license.
+namespace TicTacToe
 open System.Reflection
 open System.Runtime.CompilerServices
 

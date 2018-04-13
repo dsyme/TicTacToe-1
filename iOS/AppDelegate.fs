@@ -1,4 +1,5 @@
-﻿namespace TicTacToe.iOS
+﻿// Copyright 2018 Elmish.XamarinForms contributors. See LICENSE.md for license.
+namespace TicTacToe.iOS
 
 open System
 open UIKit

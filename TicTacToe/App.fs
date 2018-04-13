@@ -1,7 +1,12 @@
-﻿namespace TicTacToe
+﻿// Copyright 2018 Elmish.XamarinForms contributors. See LICENSE.md for license.
+
+/// NOTE NOTE NOTE - this version of this sample uses "dynamic" view updates which currently 
+/// results in flickering on each update of the UI.  Thus this is not yet appropriate for anything but a sample.
+namespace TicTacToe
 
 open Elmish
 open Elmish.XamarinForms
+open Elmish.XamarinForms.DynamicViewHelpers
 open Xamarin.Forms
 
 /// Represents a player and a player's move
@@ -133,7 +138,7 @@ module App =
     /// The visual contents of a cell depends on this condition.
     let canPlay model cell = (cell = Empty) && (getGameResult model = StillPlaying)
 
-    /// The 'view' function giving the Xaml bindings from the model to the view
+    /// The dynamic 'view' function giving the updated content for the view
     let view model dispatch =
         rows 
             [ rowdef "*"; rowdef "auto"; rowdef "auto" ]
@@ -159,14 +164,14 @@ module App =
                 |> withVerticalOptions LayoutOptions.Center
 
               label (getMessage model) 
-                 |> withMargin 10.0
-                 |> withLabelTextColor Color.Black
-                 |> withHorizontalTextAlignment TextAlignment.Center
+                |> withMargin 10.0
+                |> withLabelTextColor Color.Black
+                |> withHorizontalTextAlignment TextAlignment.Center
 
               button (fun () -> dispatch Restart)
-                 |> withText("Restart game")
-                 |> withBackgroundColor Color.LightBlue
-                 |> withButtonTextColor Color.Black  ]
+                |> withText("Restart game")
+                |> withBackgroundColor Color.LightBlue
+                |> withButtonTextColor Color.Black  ]
 
                    //,FontSize=(FontSizeConverter().ConvertFromInvariantString "Large") :> float)
 
